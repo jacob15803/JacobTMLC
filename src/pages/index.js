@@ -1,23 +1,42 @@
 import Head from "next/head";
-import { useState } from "react"; //React Hook for State
+import { useEffect, useState } from "react"; //React Hook for State
 
-// MUI Imports
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-
-import Button from "@mui/material/Button";
-import{theme,darkTheme} from "../styles/mui/theme"
+// Material
+import {
+  Box,
+  Container,
+  CssBaseline,
+  Grid,
+  ThemeProvider,
+} from "@mui/material";
+import { useTheme } from "@mui/material";
 
 import MyAppBar from "@/components/common/MyAppBar";
-import { ThemeProvider } from "@mui/material";
 
-  export default function Home() {
-  const [visible, setVisible] = useState(false); // Always call hooks at the top of the function.
+import { lightTheme, darkTheme } from "@/styles/mui/theme";
+import { CustomCard, MyCard } from "@/styles/mui/customComponent";
+
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { selectTheme, getActiveTheme } from "@/redux/reducers/themeReducer";
+
+export default function Home() {
+  const dispatch = useDispatch();
+  const currentTheme = useSelector(selectTheme).activeTheme;
+
+  useEffect(() => {
+    dispatch(getActiveTheme()); // To get theme from Cookie
+  }, []);
+
+  // const [visible, setVisible] = useState(false); // Always call hooks at the top of the function.
+  // const [currentTheme, setCurrentTheme] = useState("light");
+
+  const theme = useTheme();
 
   const movies = [
     {
-      name: "Avengers",
-      img: "https://imgix.ranker.com/list_img_v2/18864/1998864/original/the-best-the-avengers-quotes",
+      name: "Fight Club",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkiBlLWuu1a0B1Wt-bkTagxXGu2C0KhLdI36DBFssZ0obqAViVFv7LRC8iGkPRURoNsB2wAMag1ldmBhfRc9QEkj8ZxiL3mDGriz6khlqI&s=10",
       desc: "Directed By Joss Whedon",
     },
     {
@@ -36,43 +55,52 @@ import { ThemeProvider } from "@mui/material";
       desc: "Directed By Steven Spielberg",
     },
     {
-      name: "Superman",
-      img: "https://image.tmdb.org/t/p/original/3rGzY1RaVgWIP4GuOTwdHwHXSgM.jpg",
-      desc: "Directed by James Gunn",
+      name: "Tenet",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG76USMDRztfTTgzxIo3-B2D47aYvtaiA2R2se-Qiq09G4OdAaRw3pBOCWjqIyr7HS1OST-f6Prr0I-fVw_vXhbtqVT9EHHc-R9ifVQJFh&s=10",
+      desc: "Directed by Chris Nolan",
     },
   ];
-
-  return (
-    <ThemeProvider theme={darkTheme}>
+return (
     <>
-    
-      <Head>
-        <title>The Movie Lovers Club | Your Favourite Movie Articles!</title>
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-   
-      <Box>
-        <Box sx={{ flexGrow: 1 }}>
-         <MyAppBar>
+      <ThemeProvider theme={currentTheme === "dark" ? darkTheme : theme}>
+        <CssBaseline />
+        <Head>
+          <title>The Movie Lovers Club | Your Favourite Movie Articles!</title>
+          <meta name="description" content="" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <MyAppBar />
+        <Box height="25px" />
+        <Box>
+          <Container>
+            <Grid container spacing={2} direction="row" justifyContent="center">
+              {movies ? (
+                movies.map((movie) => (
+                  <Grid size={{ xl: 4, md: 4, xs: 12 }}>
+                    <CustomCard
+                      name={movie.name}
+                      image={movie.img}
+                      description={movie.desc}
+                    />
+                  </Grid>
+                ))
+              ) : (
+                <></>
+              )}
+            </Grid>
+          </Container>
+          {/* <Button onClick={() => setVisible(!visible)}>Toggle</Button>
 
-         </MyAppBar>
+            <Box height="20px" />
+
+            {visible ? (
+              <Box height="200px" sx={{ background: "pink", width: "500px" }} />
+            ) : (
+              <></>
+            )} */}
         </Box>
-        
-        <Button onClick={() => setVisible(!visible)}>Toggle</Button>
-        
-        <Box height="20px" />
-
-        {visible ? (
-          <Box height="200px" sx={{ background: "pink", width: "500px" }} />
-        ) : (
-          <></>
-        )}
-      </Box>
-      
+      </ThemeProvider>
     </>
-    </ThemeProvider>
-
   );
 }
