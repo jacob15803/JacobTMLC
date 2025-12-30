@@ -1,0 +1,30 @@
+import java.util.*;
+class DigitalAnalyzer{
+    int countDigit(int num,int d){
+        int rem=num;
+        int cnt=0;
+        int re;
+        while(rem>0){
+            re= rem%10;
+            if(re==d) {
+                cnt+=1;    
+            }
+            rem=rem/10;
+
+        }
+        return cnt;
+
+    }
+}
+class Main{
+    public static void main(String[] args){
+        DigitalAnalyzer dc= new DigitalAnalyzer();
+        Scanner sc=new Scanner(System.in);
+        System.out.println("1st Number");
+        int a=sc.nextInt();
+        System.out.println("2nd Number");
+        int b =sc.nextInt();
+        int  res=dc.countDigit(a,b);
+        System.out.println("Result="+res);
+    }
+}
